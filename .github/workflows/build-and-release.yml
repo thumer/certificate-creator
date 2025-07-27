@@ -24,17 +24,32 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore certificate-creator.sln
 
-      - name: Publish application
+      - name: Publish WPF application
         run: dotnet publish src/CertificateCreator/CertificateCreator.csproj -c Release -r win-x64 --self-contained false -o publish
 
-      - name: Archive binaries
+      - name: Archive WPF binaries
         run: Compress-Archive -Path publish/* -DestinationPath certificate-creator.zip
 
-      - name: Upload artifact
+      - name: Publish CLI for linux
+        run: dotnet publish src/CertificateCli/CertificateCli.csproj -c Release -r linux-x64 --self-contained false -o publish-cli-linux
+
+      - name: Archive CLI linux
+        run: Compress-Archive -Path publish-cli-linux/* -DestinationPath certificate-cli-linux.zip
+
+      - name: Publish CLI for macOS
+        run: dotnet publish src/CertificateCli/CertificateCli.csproj -c Release -r osx-x64 --self-contained false -o publish-cli-osx
+
+      - name: Archive CLI macOS
+        run: Compress-Archive -Path publish-cli-osx/* -DestinationPath certificate-cli-osx.zip
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: certificate-creator
-          path: certificate-creator.zip
+          path: |
+            certificate-creator.zip
+            certificate-cli-linux.zip
+            certificate-cli-osx.zip
+          name: certificate-binaries
 
   release:
     runs-on: ubuntu-latest
@@ -43,10 +58,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download artifact
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: certificate-creator
+          name: certificate-binaries
           path: .
 
       - name: Bump version and create tag
@@ -59,7 +74,10 @@ jobs:
       - name: Create GitHub release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: certificate-creator.zip
+          artifacts: |
+            certificate-creator.zip
+            certificate-cli-linux.zip
+            certificate-cli-osx.zip
           tag: ${{ steps.tag.outputs.new_tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true

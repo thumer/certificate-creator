@@ -5,7 +5,9 @@ Dieses Projekt stellt ein kleines WPF Tool bereit, mit dem selbst signierte Zert
 ## Projektstruktur
 
 - `certificate-creator.sln` - Visual Studio Solution
-- `src/CertificateCreator` - WPF Anwendung und Kommandozeilen Tool
+ - `src/CertificateCreator` - WPF Anwendung
+ - `src/CertificateCli` - plattformunabhängiges Kommandozeilen Tool
+ - `src/CertificateLib` - gemeinsame Logik
 
 ## UI Verwendung
 
@@ -32,6 +34,8 @@ Verfügbare Parameter:
 - `--years=<Gültigkeit in Jahren>` (Standard 5)
 - `--with-root` Root Zertifikat zusätzlich erstellen
 
+Unter Linux und macOS kann das Konsolentool `certificatecli` verwendet werden.
+
 ## Build
 
 ```bash
@@ -41,3 +45,4 @@ dotnet build certificate-creator.sln
 Benötigt wird das **.NET 9 SDK**.
 
 Beachten Sie, dass das Kompilieren von WPF Anwendungen nur unter Windows möglich ist.
+Das Konsolentool kann auf allen Plattformen gebaut werden.
