@@ -1,0 +1,19 @@
+# Ignore build outputs
+bin/
+obj/
+
+# Visual Studio files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# MacOS
+.DS_Store
+
+# Node modules
+node_modules/
+
+# Artifacts
+*.zip
+publish/
